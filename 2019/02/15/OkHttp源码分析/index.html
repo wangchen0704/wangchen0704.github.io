@@ -82,14 +82,14 @@
 <meta name="description" content="一、源码地址及用法OkHttp github地址:https://github.com/square/okhttp 最新版本是3.0+ 二、同步请求用法123456789101112//  构建okHttpClient，Builder设计模式OkHttpClient okHttpClient = new OkHttpClient.Builder().readTimeout(5, TimeUnit.">
 <meta name="keywords" content="OkHttp 源码 Android">
 <meta property="og:type" content="article">
-<meta property="og:title" content="学习">
+<meta property="og:title" content="学习OkHttp源码">
 <meta property="og:url" content="http://yoursite.com/2019/02/15/OkHttp源码分析/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:description" content="一、源码地址及用法OkHttp github地址:https://github.com/square/okhttp 最新版本是3.0+ 二、同步请求用法123456789101112//  构建okHttpClient，Builder设计模式OkHttpClient okHttpClient = new OkHttpClient.Builder().readTimeout(5, TimeUnit.">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-04-01T07:06:47.412Z">
+<meta property="og:updated_time" content="2019-04-01T07:15:14.368Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="学习">
+<meta name="twitter:title" content="学习OkHttp源码">
 <meta name="twitter:description" content="一、源码地址及用法OkHttp github地址:https://github.com/square/okhttp 最新版本是3.0+ 二、同步请求用法123456789101112//  构建okHttpClient，Builder设计模式OkHttpClient okHttpClient = new OkHttpClient.Builder().readTimeout(5, TimeUnit.">
 
 
@@ -126,7 +126,7 @@
 
 
 
-  <title>学习 | Hexo</title>
+  <title>学习OkHttp源码 | Hexo</title>
   
 
 
@@ -250,7 +250,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">学习</h1>
+          <h1 class="post-title" itemprop="name headline">学习OkHttp源码</h1>
         
 
         <div class="post-meta">
@@ -303,6 +303,7 @@
         <h2 id="一、源码地址及用法"><a href="#一、源码地址及用法" class="headerlink" title="一、源码地址及用法"></a>一、源码地址及用法</h2><p><a href="https://github.com/square/okhttp" target="_blank" rel="noopener">OkHttp github地址:https://github.com/square/okhttp</a></p>
 <p>最新版本是3.0+</p>
 <h2 id="二、同步请求用法"><a href="#二、同步请求用法" class="headerlink" title="二、同步请求用法"></a>二、同步请求用法</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">//  构建okHttpClient，Builder设计模式</span><br><span class="line">OkHttpClient okHttpClient = new OkHttpClient.Builder().readTimeout(5, TimeUnit.SECONDS).build();</span><br><span class="line">       // 构建一个请求体，Builder设计模式</span><br><span class="line">       Request request = new Request.Builder().url(&quot;http://www.baidu.com&quot;).build();</span><br><span class="line">       //  生成一个Call对象</span><br><span class="line">       Call call = okHttpClient.newCall(request);</span><br><span class="line">       try &#123;</span><br><span class="line">           //  拿到Response</span><br><span class="line">           Response response = call.execute();</span><br><span class="line">           Log.i(&quot;TAG&quot;,response.body().string());</span><br><span class="line">       &#125; catch (IOException e) &#123;</span><br><span class="line">       &#125;</span><br></pre></td></tr></table></figure>
+ <a id="more"></a>
 <p>上面就是一个简单的同步请求示例代码，我们看看看要有哪些步骤：<br><strong>1.Builder设计模式创建OkHttpClient 和 Request 对象;<br>2.调用OkHttpClient对象的newCall()方法,获取Call对象,Request对象作为参数传入;<br>3.调用Call对象的execute()方法获取Response对象.</strong></p>
 <h2 id="三、源码分析"><a href="#三、源码分析" class="headerlink" title="三、源码分析"></a>三、源码分析</h2><p>看完了上面的关于同步的用法,接下来我们看看OkHttp内部是怎么实现的.</p>
 <h4 id="1-OkHttpClient源码"><a href="#1-OkHttpClient源码" class="headerlink" title="(1)OkHttpClient源码"></a>(1)OkHttpClient源码</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">public static final class Builder &#123;</span><br><span class="line">    Dispatcher dispatcher;</span><br><span class="line">    ...</span><br><span class="line">    ...</span><br><span class="line">    public Builder() &#123;</span><br><span class="line">      dispatcher = new Dispatcher();</span><br><span class="line">      protocols = DEFAULT_PROTOCOLS;</span><br><span class="line">      connectionSpecs = DEFAULT_CONNECTION_SPECS;</span><br><span class="line">      eventListenerFactory = EventListener.factory(EventListener.NONE);</span><br><span class="line">      proxySelector = ProxySelector.getDefault();</span><br><span class="line">      if (proxySelector == null) &#123;</span><br><span class="line">        proxySelector = new NullProxySelector();</span><br><span class="line">      &#125;</span><br><span class="line">      cookieJar = CookieJar.NO_COOKIES;</span><br><span class="line">      socketFactory = SocketFactory.getDefault();</span><br><span class="line">      hostnameVerifier = OkHostnameVerifier.INSTANCE;</span><br><span class="line">      certificatePinner = CertificatePinner.DEFAULT;</span><br><span class="line">      proxyAuthenticator = Authenticator.NONE;</span><br><span class="line">      authenticator = Authenticator.NONE;</span><br><span class="line">      connectionPool = new ConnectionPool();</span><br><span class="line">      dns = Dns.SYSTEM;</span><br><span class="line">      followSslRedirects = true;</span><br><span class="line">      followRedirects = true;</span><br><span class="line">      retryOnConnectionFailure = true;</span><br><span class="line">      callTimeout = 0;</span><br><span class="line">      connectTimeout = 10_000;</span><br><span class="line">      readTimeout = 10_000;</span><br><span class="line">      writeTimeout = 10_000;</span><br><span class="line">      pingInterval = 0;</span><br><span class="line">    &#125;</span><br><span class="line">   </span><br><span class="line">&#125;</span><br><span class="line">  </span><br><span class="line"></span><br><span class="line"> public ConnectionPool(int maxIdleConnections, long keepAliveDuration, TimeUnit timeUnit) &#123;</span><br><span class="line">    this.maxIdleConnections = maxIdleConnections;</span><br><span class="line">    this.keepAliveDurationNs = timeUnit.toNanos(keepAliveDuration);</span><br><span class="line"></span><br><span class="line">    // Put a floor on the keep alive duration, otherwise cleanup will spin loop.</span><br><span class="line">    if (keepAliveDuration &lt;= 0) &#123;</span><br><span class="line">      throw new IllegalArgumentException(&quot;keepAliveDuration &lt;= 0: &quot; + keepAliveDuration);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
