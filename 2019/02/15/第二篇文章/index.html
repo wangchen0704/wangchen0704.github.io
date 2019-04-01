@@ -79,15 +79,18 @@
 
 
 
+<meta name="description" content="源码地址及用法 OkHttp github地址:https://github.com/square/okhttp 最新版本是3.0+同步请求用法  //  构建okHttpClient，Builder设计模式 OkHttpClient okHttpClient = new OkHttpClient.Builder().readTimeout(5, TimeUnit.SECONDS).build()">
 <meta name="keywords" content="OkHttp 源码 Android">
 <meta property="og:type" content="article">
 <meta property="og:title" content="学习OkHttp">
 <meta property="og:url" content="http://yoursite.com/2019/02/15/第二篇文章/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="源码地址及用法 OkHttp github地址:https://github.com/square/okhttp 最新版本是3.0+同步请求用法  //  构建okHttpClient，Builder设计模式 OkHttpClient okHttpClient = new OkHttpClient.Builder().readTimeout(5, TimeUnit.SECONDS).build()">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-04-01T02:32:49.074Z">
+<meta property="og:updated_time" content="2019-04-01T05:49:08.978Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="学习OkHttp">
+<meta name="twitter:description" content="源码地址及用法 OkHttp github地址:https://github.com/square/okhttp 最新版本是3.0+同步请求用法  //  构建okHttpClient，Builder设计模式 OkHttpClient okHttpClient = new OkHttpClient.Builder().readTimeout(5, TimeUnit.SECONDS).build()">
 
 
 
@@ -297,7 +300,28 @@
       
 
       
-        
+        <p>源码地址及用法</p>
+<p>OkHttp github地址:<a href="https://github.com/square/okhttp" target="_blank" rel="noopener">https://github.com/square/okhttp</a></p>
+<p>最新版本是3.0+<br>同步请求用法</p>
+<p> //  构建okHttpClient，Builder设计模式<br> OkHttpClient okHttpClient = new OkHttpClient.Builder().readTimeout(5, TimeUnit.SECONDS).build();<br>        // 构建一个请求体，Builder设计模式<br>        Request request = new Request.Builder().url(“<a href="http://www.baidu.com&quot;).build()" target="_blank" rel="noopener">http://www.baidu.com&quot;).build()</a>;<br>        //  生成一个Call对象<br>        Call call = okHttpClient.newCall(request);<br>        try {<br>            //  拿到Response<br>            Response response = call.execute();<br>            Log.i(“TAG”,response.body().string());<br>        } catch (IOException e) {<br>        }</p>
+<p>上面就是一个简单的同步请求示例代码，我们看看看要有哪些步骤：<br>1.Builder设计模式创建OkHttpClient 和 Request 对象;<br>2.调用OkHttpClient对象的newCall()方法,获取Call对象,Request对象作为参数传入;<br>3.调用Call对象的execute()方法获取Response对象.<br>源码分析</p>
+<p>看完了上面的关于同步的用法,接下来我们看看OkHttp内部是怎么实现的.<br>一、OkHttpClient源码分析</p>
+<p>public static final class Builder {<br>    Dispatcher dispatcher;<br>    …<br>    …<br>    public Builder() {<br>      dispatcher = new Dispatcher();<br>      protocols = DEFAULT_PROTOCOLS;<br>      connectionSpecs = DEFAULT_CONNECTION_SPECS;<br>      eventListenerFactory = EventListener.factory(EventListener.NONE);<br>      proxySelector = ProxySelector.getDefault();<br>      if (proxySelector == null) {<br>        proxySelector = new NullProxySelector();<br>      }<br>      cookieJar = CookieJar.NO_COOKIES;<br>      socketFactory = SocketFactory.getDefault();<br>      hostnameVerifier = OkHostnameVerifier.INSTANCE;<br>      certificatePinner = CertificatePinner.DEFAULT;<br>      proxyAuthenticator = Authenticator.NONE;<br>      authenticator = Authenticator.NONE;<br>      connectionPool = new ConnectionPool();<br>      dns = Dns.SYSTEM;<br>      followSslRedirects = true;<br>      followRedirects = true;<br>      retryOnConnectionFailure = true;<br>      callTimeout = 0;<br>      connectTimeout = 10_000;<br>      readTimeout = 10_000;<br>      writeTimeout = 10_000;<br>      pingInterval = 0;<br>    }</p>
+<p>}</p>
+<p> public ConnectionPool(int maxIdleConnections, long keepAliveDuration, TimeUnit timeUnit) {<br>    this.maxIdleConnections = maxIdleConnections;<br>    this.keepAliveDurationNs = timeUnit.toNanos(keepAliveDuration);</p>
+<pre><code>// Put a floor on the keep alive duration, otherwise cleanup will spin loop.
+if (keepAliveDuration &lt;= 0) {
+  throw new IllegalArgumentException(&quot;keepAliveDuration &lt;= 0: &quot; + keepAliveDuration);
+}
+</code></pre><p>  }</p>
+<p>Builder是OkHttpClient一个静态内部类，在Builder的构造函数中进行了一系列的初始化操作，其中Dispatcher中文是分发器的意思，和拦截器不同的是分发器不做事件处理，只做事件流向。他负责将每一次Requst进行分发，压栈到自己的线程池，并通过调用者自己不同的方式进行异步和同步处理，那具体操作后面会讲。ConnectionPool是一个连接池对象，它可以用来管理连接对象，从它的构造方法中可以看到连接池的默认空闲连接数为5个，keepAlive时间为5分钟。<br>二、Response源码分析</p>
+<p>public static class Builder {<br>    @Nullable HttpUrl url;<br>    String method;<br>    Headers.Builder headers;<br>    @Nullable RequestBody body;</p>
+<pre><code>public Builder() {
+  this.method = &quot;GET&quot;;
+  this.headers = new Headers.Builder();
+}
+</code></pre><p>}</p>
+
       
     </div>
     
