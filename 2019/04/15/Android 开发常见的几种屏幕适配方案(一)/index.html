@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="Android 屏幕适配 AutoLayout SmallestWidth,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="相信做安卓开发的同学一直对屏幕适配问题头疼不已,Google官方虽然给出了一系列的建议，但是想要单纯使用这些建议将设备很轻松的做好，还是相当困难的.我从一开始接触安卓适配到使用AutoLayout 得益于 AndroidAutoLayout 的便捷，所以我对屏幕适配领域研究的不是很多，AndroidAutoLayout 停止维护后，我也一直在找寻着替代方案，直到 今日头条屏幕适配方案 刷屏，后来又">
+<meta name="keywords" content="Android 屏幕适配 AutoLayout SmallestWidth">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Android 开发常见的几种屏幕适配方案(一)">
+<meta property="og:url" content="http://yoursite.com/2019/04/15/Android 开发常见的几种屏幕适配方案(一)/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="相信做安卓开发的同学一直对屏幕适配问题头疼不已,Google官方虽然给出了一系列的建议，但是想要单纯使用这些建议将设备很轻松的做好，还是相当困难的.我从一开始接触安卓适配到使用AutoLayout 得益于 AndroidAutoLayout 的便捷，所以我对屏幕适配领域研究的不是很多，AndroidAutoLayout 停止维护后，我也一直在找寻着替代方案，直到 今日头条屏幕适配方案 刷屏，后来又">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://upload-images.jianshu.io/upload_images/2573196-dba88e959cd33bef.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/708">
+<meta property="og:updated_time" content="2019-04-15T09:40:17.891Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Android 开发常见的几种屏幕适配方案(一)">
+<meta name="twitter:description" content="相信做安卓开发的同学一直对屏幕适配问题头疼不已,Google官方虽然给出了一系列的建议，但是想要单纯使用这些建议将设备很轻松的做好，还是相当困难的.我从一开始接触安卓适配到使用AutoLayout 得益于 AndroidAutoLayout 的便捷，所以我对屏幕适配领域研究的不是很多，AndroidAutoLayout 停止维护后，我也一直在找寻着替代方案，直到 今日头条屏幕适配方案 刷屏，后来又">
+<meta name="twitter:image" content="https://upload-images.jianshu.io/upload_images/2573196-dba88e959cd33bef.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/708">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/04/15/Android 开发常见的几种屏幕适配方案(一)/">
+
+
+
+
+
+  <title>Android 开发常见的几种屏幕适配方案(一) | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/04/15/Android 开发常见的几种屏幕适配方案(一)/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Wang Chen">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Android 开发常见的几种屏幕适配方案(一)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-04-15T16:54:55+08:00">
+                2019-04-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p><img src="https://upload-images.jianshu.io/upload_images/2573196-dba88e959cd33bef.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/708" alt="上图的每一个方框都代表一种 Android 设备的屏幕"><br><em>相信做安卓开发的同学一直对屏幕适配问题头疼不已,Google官方虽然给出了一系列的建议，但是想要单纯使用这些建议将设备很轻松的做好，还是相当困难的.我从一开始接触安卓适配到使用<a href="https://blog.csdn.net/lmj623565791/article/details/49990941" target="_blank" rel="noopener">AutoLayout</a> 得益于 AndroidAutoLayout 的便捷，所以我对屏幕适配领域研究的不是很多，AndroidAutoLayout 停止维护后，我也一直在找寻着替代方案，直到 <a href="https://www.jianshu.com/p/55e0fca23b4f" target="_blank" rel="noopener">今日头条屏幕适配方案</a> 刷屏，后来又无意间看到了 <a href="https://www.jianshu.com/p/2aded8bb6ede." target="_blank" rel="noopener">smallestWidth 限定符屏幕适配方案</a>.<a id="more"></a>今天就来介绍介绍这三种适配方法:</em></p>
+<h2 id="一、Android-AutoLayout适配"><a href="#一、Android-AutoLayout适配" class="headerlink" title="一、Android AutoLayout适配"></a>一、Android AutoLayout适配</h2><h4 id="1-项目地址"><a href="#1-项目地址" class="headerlink" title="1.项目地址"></a>1.项目地址</h4><p><a href="https://github.com/hongyangAndroid/AndroidAutoLayout" target="_blank" rel="noopener">https://github.com/hongyangAndroid/AndroidAutoLayout</a> 现已停止维护</p>
+<h4 id="2-基本用法"><a href="#2-基本用法" class="headerlink" title="2.基本用法"></a>2.基本用法</h4><p><em>第一步</em>:引入compile ‘com.zhy:autolayout:1.4.5’<br><em>第二步</em>:在你的项目的AndroidManifest中注明你的设计稿的尺寸。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;meta-data android:name=&quot;design_width&quot; android:value=&quot;768&quot;&gt;</span><br><span class="line">&lt;/meta-data&gt;</span><br><span class="line">&lt;meta-data android:name=&quot;design_height&quot; android:value=&quot;1280&quot;&gt;</span><br><span class="line">&lt;/meta-data&gt;</span><br></pre></td></tr></table></figure></p>
+<p><em>第三步</em>:让你的Activity继承自AutoLayoutActivity.<br><em>第四步(非必要)</em>:如果你不想让你的Activity继承AutoLayoutActivity,你也可以</p>
+<pre><code>LinearLayout -&gt; AutoLinearLayout
+RelativeLayout -&gt; AutoRelativeLayout
+FrameLayout -&gt; AutoFrameLayout
+</code></pre><p>同样适配.</p>
+<p>然后你就可以按照设计师给你的尺寸图照搬原样就可以了.原有的设计图用多少px你就用多少px,是的,是px.<strong>本库适配的原理这个px并不代表1像素，他在内部会进行百分比化处理，也就是说：720px高度的屏幕，你这里填写72px，占据10%；当这个布局文件运行在任何分辨率的手机上，这个72px都代表10%的高度。</strong></p>
+<h2 id="二、SmallestWidth-限定符适配方案"><a href="#二、SmallestWidth-限定符适配方案" class="headerlink" title="二、SmallestWidth 限定符适配方案"></a>二、SmallestWidth 限定符适配方案</h2><h4 id="1-介绍"><a href="#1-介绍" class="headerlink" title="1.介绍"></a>1.介绍</h4><p>这个方案的的使用方式和我们平时在布局中引用 dimens 无异，核心点在于生成 dimens.xml 文件，但是已经有大神帮我们做了这 一步<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">├── src/main</span><br><span class="line">│   ├── res</span><br><span class="line">│   ├── ├──values</span><br><span class="line">│   ├── ├──values-800x480</span><br><span class="line">│   ├── ├──values-860x540</span><br><span class="line">│   ├── ├──values-1024x600</span><br><span class="line">│   ├── ├──values-1024x768</span><br><span class="line">│   ├── ├──...</span><br><span class="line">│   ├── ├──values-2560x1440</span><br></pre></td></tr></table></figure></p>
+<p>如果有人还记得上面这种 <strong>宽高限定符屏幕适配方案</strong> 的话，就可以把 smallestWidth 限定符屏幕适配方案 当成这种方案的升级版，smallestWidth 限定符屏幕适配方案 只是把 dimens.xml 文件中的值从 <strong>px</strong> 换成了 <strong>dp</strong>，原理和使用方式都是没变的，这些在上面的文章中都有介绍，下面就直接开始剖析原理，smallestWidth 限定符屏幕适配方案 长这样👇<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">├── src/main</span><br><span class="line">│   ├── res</span><br><span class="line">│   ├── ├──values</span><br><span class="line">│   ├── ├──values-sw320dp</span><br><span class="line">│   ├── ├──values-sw360dp</span><br><span class="line">│   ├── ├──values-sw400dp</span><br><span class="line">│   ├── ├──values-sw411dp</span><br><span class="line">│   ├── ├──values-sw480dp</span><br><span class="line">│   ├── ├──...</span><br><span class="line">│   ├── ├──values-sw600dp</span><br><span class="line">│   ├── ├──values-sw640dp</span><br></pre></td></tr></table></figure></p>
+<h4 id="2-原理"><a href="#2-原理" class="headerlink" title="2.原理"></a>2.原理</h4><p>其实 <strong>smallestWidth 限定符屏幕适配方案</strong> 的原理也很简单，开发者先在项目中根据主流屏幕的 <strong>最小宽度 (smallestWidth)</strong> 生成一系列 <strong>values-sw<n>dp</n></strong> 文件夹 (含有 dimens.xml 文件)，当把项目运行到设备上时，系统会根据当前设备屏幕的 <strong>最小宽度 (smallestWidth)</strong> 去匹配对应的 values-sw<n>dp 文件夹，而对应的 values-sw<n>dp 文件夹中的 dimens.xml 文字中的值，又是根据当前设备屏幕的 最小宽度 (smallestWidth) 而定制的，所以一定能适配当前设备.<br>如果系统根据当前设备屏幕的 最小宽度 (smallestWidth) 没找到对应的 values-sw<n>dp 文件夹，则会去寻找与之 <strong>最小宽度 (smallestWidth) 相近的</strong> values-sw<n>dp 文件夹，系统只会寻找<strong>小于或等于当前设备</strong> 最小宽度 (smallestWidth) 的 values-sw<n>dp，这就是优于 宽高限定符屏幕适配方案 的容错率，并且也可以少生成很多 values-sw<n>dp 文件夹，减轻 App 的体积.</n></n></n></n></n></n></p>
+<h4 id="3-smallestWidth-的值是怎么算的"><a href="#3-smallestWidth-的值是怎么算的" class="headerlink" title="3.smallestWidth 的值是怎么算的"></a>3.smallestWidth 的值是怎么算的</h4><p>要先算出当前设备的 smallestWidth 值我们才能知道当前设备该匹配哪个 values-sw<n>dp 文件夹.<br>ok，还是按照上一篇文章的叙述方式，现在来举栗说明，帮助大家更好理解.<br>我们假设设备的屏幕信息是 1920 <em> 1080、480 dpi<br>根据上面的规则我们要在屏幕的高度和宽度中选择值最小的一方作为最小宽度，1080 &lt; 1920，明显 1080 px 就是我们要找的 最小宽度 的值，但 最小宽度 的单位是 dp，所以我们要把 px 转换为 dp<br>帮助大家再巩固下基础，下面的公式一定不能再忘了！<br><strong>px / density = dp，DPI / 160 = density</strong>，所以最终的公式是 **</em>px / (DPI / 160) = dp***<br>所以我们得到的 最小宽度 的值是 360 dp (1080 / (480 / 160) = 360)<br>现在我们已经算出了当前设备的最小宽度是 360 dp，我们晓得系统会根据这个 最小宽度 帮助我们匹配到 values-sw360dp 文件夹下的 dimens.xml 文件，如果项目中没有 values-sw360dp 这个文件夹，系统才会去匹配相近的 values-sw<n>dp 文件夹.<br>dimens.xml 文件是整个方案的核心所在，所以接下来我们再来看看 values-sw360dp 文件夹中的这个 dimens.xml 是根据什么原理生成的.</n></n></p>
+<h4 id="4-dimens-xml-生成原理"><a href="#4-dimens-xml-生成原理" class="headerlink" title="4.dimens.xml 生成原理"></a>4.dimens.xml 生成原理</h4><p>说到 dimens.xml 的生成，就要涉及到两个因数，第一个因素是 <strong>最小宽度基准值</strong>，第二个因素就是您的<strong>项目需要适配哪些 最小宽度</strong>，通俗理解就是需要生成多少个 values-sw<n>dp 文件夹</n></p>
+<p><strong><em>最小宽度基准值</em></strong> 是什么意思呢？简单理解就是您需要把设备的屏幕宽度分为多少份，假设我们现在把项目的 最小宽度基准值 定为 360，那这个方案就会理解为您想把所有设备的屏幕宽度都分为 360 份，方案会帮您在 dimens.xml 文件中生成 1 到 360 的 dimens 引用，比如 values-sw360dp 中的 dimens.xml 是长这样的:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;resources&gt;</span><br><span class="line">    &lt;dimen name=&quot;dp_1&quot;&gt;1dp&lt;/dimen&gt;</span><br><span class="line">    &lt;dimen name=&quot;dp_2&quot;&gt;2dp&lt;/dimen&gt;</span><br><span class="line">    &lt;dimen name=&quot;dp_3&quot;&gt;3dp&lt;/dimen&gt;</span><br><span class="line">    &lt;dimen name=&quot;dp_4&quot;&gt;4dp&lt;/dimen&gt;</span><br><span class="line">    &lt;dimen name=&quot;dp_5&quot;&gt;5dp&lt;/dimen&gt;</span><br><span class="line">    &lt;dimen name=&quot;dp_6&quot;&gt;6dp&lt;/dimen&gt;</span><br><span class="line">    &lt;dimen name=&quot;dp_7&quot;&gt;7dp&lt;/dimen&gt;</span><br><span class="line">    &lt;dimen name=&quot;dp_8&quot;&gt;8dp&lt;/dimen&gt;</span><br><span class="line">    &lt;dimen name=&quot;dp_9&quot;&gt;9dp&lt;/dimen&gt;</span><br><span class="line">    &lt;dimen name=&quot;dp_10&quot;&gt;10dp&lt;/dimen&gt;</span><br><span class="line">    ...</span><br><span class="line">    &lt;dimen name=&quot;dp_356&quot;&gt;356dp&lt;/dimen&gt;</span><br><span class="line">    &lt;dimen name=&quot;dp_357&quot;&gt;357dp&lt;/dimen&gt;</span><br><span class="line">    &lt;dimen name=&quot;dp_358&quot;&gt;358dp&lt;/dimen&gt;</span><br><span class="line">    &lt;dimen name=&quot;dp_359&quot;&gt;359dp&lt;/dimen&gt;</span><br><span class="line">    &lt;dimen name=&quot;dp_360&quot;&gt;360dp&lt;/dimen&gt;</span><br><span class="line">&lt;/resources&gt;</span><br></pre></td></tr></table></figure></p>
+<p>下面再来看看将 最小宽度基准值 定为 360 时，values-sw400dp 中的 dimens.xml 长什么样:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;</span><br><span class="line">&lt;resources&gt;</span><br><span class="line">    &lt;dimen name=&quot;dp_1&quot;&gt;1.1111dp&lt;/dimen&gt;</span><br><span class="line">    &lt;dimen name=&quot;dp_2&quot;&gt;2.2222dp&lt;/dimen&gt;</span><br><span class="line">    &lt;dimen name=&quot;dp_3&quot;&gt;3.3333dp&lt;/dimen&gt;</span><br><span class="line">    &lt;dimen name=&quot;dp_4&quot;&gt;4.4444dp&lt;/dimen&gt;</span><br><span class="line">    &lt;dimen name=&quot;dp_5&quot;&gt;5.5556dp&lt;/dimen&gt;</span><br><span class="line">    &lt;dimen name=&quot;dp_6&quot;&gt;6.6667dp&lt;/dimen&gt;</span><br><span class="line">    &lt;dimen name=&quot;dp_7&quot;&gt;7.7778dp&lt;/dimen&gt;</span><br><span class="line">    &lt;dimen name=&quot;dp_8&quot;&gt;8.8889dp&lt;/dimen&gt;</span><br><span class="line">    &lt;dimen name=&quot;dp_9&quot;&gt;10.0000dp&lt;/dimen&gt;</span><br><span class="line">    &lt;dimen name=&quot;dp_10&quot;&gt;11.1111dp&lt;/dimen&gt;</span><br><span class="line">    ...</span><br><span class="line">    &lt;dimen name=&quot;dp_355&quot;&gt;394.4444dp&lt;/dimen&gt;</span><br><span class="line">    &lt;dimen name=&quot;dp_356&quot;&gt;395.5556dp&lt;/dimen&gt;</span><br><span class="line">    &lt;dimen name=&quot;dp_357&quot;&gt;396.6667dp&lt;/dimen&gt;</span><br><span class="line">    &lt;dimen name=&quot;dp_358&quot;&gt;397.7778dp&lt;/dimen&gt;</span><br><span class="line">    &lt;dimen name=&quot;dp_359&quot;&gt;398.8889dp&lt;/dimen&gt;</span><br><span class="line">    &lt;dimen name=&quot;dp_360&quot;&gt;400.0000dp&lt;/dimen&gt;</span><br><span class="line">&lt;/resources&gt;</span><br></pre></td></tr></table></figure></p>
+<p>values-sw400dp 指的是当前设备屏幕的 最小宽度 为 400dp (该设备高度大于宽度，则最小宽度就是宽度，所以该设备宽度为 400dp)，把屏幕宽度同样分为 360份，这时每份就等于 <strong>1.1111dp</strong> 了，每个引用都递增 1.1111dp，值最大的 dimens 引用 dp_360 同样刚好覆盖屏幕宽度，为 400dp.<br>通过两个 dimens.xml 文件的比较，dimens.xml 的生成原理一目了然，方案会先确定 最小宽度基准值，然后将每个 values-sw<n>dp 中的 dimens.xml 文件都分配与 最小宽度基准值 相同的份数，再根据公式 屏幕最小宽度 / 份数 (最小宽度基准值) 求出每份占多少 dp，保证不管在哪个 values-sw<n>dp 中，份数 (最小宽度基准值) * 每份占的 dp 值 的结果都是刚好覆盖屏幕宽度，所以在 份数 不变的情况下，只需要根据屏幕的宽度在不同的设备上动态调整 每份占的 dp 值，就能完成适配.<br>这样就能保证不管将项目运行到哪个设备上，只要当前设备能匹配到对应的 values-sw<n>dp 文件夹，那布局中的 dimens 引用就能根据当前屏幕的情况进行缩放，保证能完美适配，如果没有匹配到对应的 values-sw<n>dp 文件夹，也没关系，它会去寻找与之相近的 values-sw<n>dp 文件夹，虽然在这种情况下，布局中的 dimens 引用的值可能有些许误差，但是也能保证最大程度的完成适配.<br>说到这里，那大家就应该就会明白我为什么会说 smallestWidth 限定符屏幕适配方案 的原理也同样是按百分比进行布局，如果在布局中，一个 View 的宽度引用 dp_100，那不管运行到哪个设备上，这个 View 的宽度都是当前设备屏幕总宽度的 360分之100，前提是项目提供有当前设备屏幕对应的 values-sw<n>dp，如果没有对应的 values-sw<n>dp，就会去寻找相近的 values-sw<n>dp，这时就会存在误差了，至于误差是大是小，这就要看您的第二个因数怎么分配了.</n></n></n></n></n></n></n></n></p>
+<p><strong><em>其实 smallestWidth 限定符屏幕适配方案 的原理和 今日头条屏幕适配方案 挺像的，今日头条屏幕适配方案 是根据屏幕的宽度或高度动态调整每个设备的 density (每 dp 占当前设备屏幕多少像素)，而 smallestWidth 限定符屏幕适配方案 同样是根据屏幕的宽度动态调整每个设备 每份占的 dp 值.</em></strong></p>
+<p><strong><em>第二个因数是需要适配哪些 最小宽度</em></strong>？比如您想适配的 最小宽度 有 320dp、360dp、400dp、411dp、480dp，那方案就会为您的项目生成 values-sw320dp、values-sw360dp、values-sw400dp、values-sw411dp、values-sw480dp 这几个资源文件夹，像这样👇<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">├── src/main</span><br><span class="line">│   ├── res</span><br><span class="line">│   ├── ├──values</span><br><span class="line">│   ├── ├──values-sw320dp</span><br><span class="line">│   ├── ├──values-sw360dp</span><br><span class="line">│   ├── ├──values-sw400dp</span><br><span class="line">│   ├── ├──values-sw411dp</span><br><span class="line">│   ├── ├──values-sw480dp</span><br></pre></td></tr></table></figure></p>
+<p>那是不是 values-sw<n>dp 文件夹生成的越多，覆盖越多市面上的设备，就越好呢？<br>也不是，因为每个 values-sw<n>dp 文件夹其实都会占用一定的 App 体积，values-sw<n>dp 文件夹越多，App 的体积也就会越大.<br>所以一定要<strong>合理分配</strong> values-sw<n>dp，以越少的 values-sw<n>dp 文件夹，覆盖越多的机型.</n></n></n></n></n></p>
+<p>总结一下,smallestWidth使用有什么缺点呢:</p>
+<ul>
+<li>在布局中引用 dimens 的方式，虽然学习成本低，但是在<strong>日常维护修改时较麻烦</strong>;</li>
+<li><strong>侵入性高</strong>，如果项目想切换为其他屏幕适配方案，因为每个 Layout 文件中都存在有大量 dimens的引用，这时修改起来工作量非常巨大，切换成本非常高昂;</li>
+<li><strong>无法覆盖全部机型</strong>，想覆盖更多机型的做法就是生成更多的资源文件，但这样会增加 App体积，在没有覆盖的机型上还会出现一定的误差，所以有时需要在适配效果和占用空间上做一些抉择 <strong>如果想使用 sp，也需要生成一系列的dimens，导致再次增加 App 的体积</strong>;</li>
+<li><strong>不能自动支持横竖屏切换时的适配</strong>，如上文所说，如果想自动支持横竖屏切换时的适配，需要使用 <strong>values-w<n>dp</n></strong> 或 <strong>屏幕方向限定符</strong>再生成一套资源文件，这样又会再次增加 App 的体积;</li>
+<li><strong>不能以高度为基准进行适配</strong>，考虑到这个方案的名字本身就叫<br>最小宽度限定符适配方案，所以在使用这个方案之前就应该要知道这个方案只能以宽度为基准进行适配;</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Android-屏幕适配-AutoLayout-SmallestWidth/" rel="tag"># Android 屏幕适配 AutoLayout SmallestWidth</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/02/15/学习OkHttp源码(同步请求)/" rel="next" title="学习OkHttp源码(同步请求)">
+                <i class="fa fa-chevron-left"></i> 学习OkHttp源码(同步请求)
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Wang Chen</p>
+              <p class="site-description motion-element" itemprop="description">bugMaker.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#一、Android-AutoLayout适配"><span class="nav-number">1.</span> <span class="nav-text">一、Android AutoLayout适配</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-项目地址"><span class="nav-number">1.0.1.</span> <span class="nav-text">1.项目地址</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-基本用法"><span class="nav-number">1.0.2.</span> <span class="nav-text">2.基本用法</span></a></li></ol></li></ol><li class="nav-item nav-level-2"><a class="nav-link" href="#二、SmallestWidth-限定符适配方案"><span class="nav-number">2.</span> <span class="nav-text">二、SmallestWidth 限定符适配方案</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-介绍"><span class="nav-number">2.0.1.</span> <span class="nav-text">1.介绍</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-原理"><span class="nav-number">2.0.2.</span> <span class="nav-text">2.原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-smallestWidth-的值是怎么算的"><span class="nav-number">2.0.3.</span> <span class="nav-text">3.smallestWidth 的值是怎么算的</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#4-dimens-xml-生成原理"><span class="nav-number">2.0.4.</span> <span class="nav-text">4.dimens.xml 生成原理</span></a></li></ol></li></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Wang Chen</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
