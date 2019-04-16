@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="OkHttp 源码 WebSocket,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="OkHttp使用—WebSocket我们先看一下怎么使用OKhtttp完成WebSocket的请求：1234//设置连接超时时间      mOkHttpClient = new OkHttpClient.Builder().connectTimeout(9 * 10, TimeUnit.SECONDS).build();      Request request = new Request.Bu">
+<meta name="keywords" content="OkHttp 源码 WebSocket">
+<meta property="og:type" content="article">
+<meta property="og:title" content="OkHttp使用—WebSocket">
+<meta property="og:url" content="http://yoursite.com/2018/10/15/OkHttp使用—WebSocket/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="OkHttp使用—WebSocket我们先看一下怎么使用OKhtttp完成WebSocket的请求：1234//设置连接超时时间      mOkHttpClient = new OkHttpClient.Builder().connectTimeout(9 * 10, TimeUnit.SECONDS).build();      Request request = new Request.Bu">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-04-16T12:36:48.028Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="OkHttp使用—WebSocket">
+<meta name="twitter:description" content="OkHttp使用—WebSocket我们先看一下怎么使用OKhtttp完成WebSocket的请求：1234//设置连接超时时间      mOkHttpClient = new OkHttpClient.Builder().connectTimeout(9 * 10, TimeUnit.SECONDS).build();      Request request = new Request.Bu">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/10/15/OkHttp使用—WebSocket/">
+
+
+
+
+
+  <title>OkHttp使用—WebSocket | Hexo</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Hexo</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/15/OkHttp使用—WebSocket/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Wang Chen">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Hexo">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">OkHttp使用—WebSocket</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-15T12:26:57+08:00">
+                2018-10-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h4 id="OkHttp使用—WebSocket"><a href="#OkHttp使用—WebSocket" class="headerlink" title="OkHttp使用—WebSocket"></a>OkHttp使用—WebSocket</h4><p>我们先看一下怎么使用OKhtttp完成WebSocket的请求：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">//设置连接超时时间</span><br><span class="line">      mOkHttpClient = new OkHttpClient.Builder().connectTimeout(9 * 10, TimeUnit.SECONDS).build();</span><br><span class="line">      Request request = new Request.Builder().url(BASE_URL).build();</span><br><span class="line">      mWebSocket = mOkHttpClient.newWebSocket(request, this);</span><br></pre></td></tr></table></figure></p>
+<p>重点在这里，打开<strong>OkHttpClient.class</strong>查找<strong>newWebSocket（）</strong>方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line">  * Uses &#123;@code request&#125; to connect a new web socket.</span><br><span class="line">  */</span><br><span class="line"> @Override public WebSocket newWebSocket(Request request, WebSocketListener listener) &#123;</span><br><span class="line">   RealWebSocket webSocket = new RealWebSocket(request, listener, new Random());</span><br><span class="line">   webSocket.connect(this);</span><br><span class="line">   return webSocket;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure></p>
+ <a id="more"></a>这里传入<strong>request对象</strong>和<strong>websocket的专用监听**</strong>WebSocketListener<strong>，WebSocketListener 对象稍后再做赘述，主流程还是看RealWebSocket.class的</strong>connect()<strong>方法:
+</strong>步骤1:**<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">client = client.newBuilder()</span><br><span class="line">       .protocols(ONLY_HTTP1)</span><br><span class="line">       .build();</span><br></pre></td></tr></table></figure>
+<p>我们都知道普通的请求时client是需要被<strong>bulid</strong>的,这里拿到<strong>OkHttpClient</strong>又<strong>重新创建了一遍</strong>,一开始就创建好了干嘛还要创建创建呢?看这个方法：<strong>protocols(ONLY_HTTP1)</strong>，<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">private static final List&lt;Protocol&gt; ONLY_HTTP1 = Collections.singletonList(Protocol.HTTP_1_1);</span><br></pre></td></tr></table></figure></p>
+<p><strong>步骤2：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">final Request request = originalRequest.newBuilder()</span><br><span class="line">        .header(&quot;Upgrade&quot;, &quot;websocket&quot;)</span><br><span class="line">        .header(&quot;Connection&quot;, &quot;Upgrade&quot;)</span><br><span class="line">        .header(&quot;Sec-WebSocket-Key&quot;, key)</span><br><span class="line">        .header(&quot;Sec-WebSocket-Version&quot;, &quot;13&quot;)</span><br><span class="line">        .build();</span><br></pre></td></tr></table></figure></p>
+<p>对request对象的头部加工，</p>
+<p><strong>步骤3：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">call = Internal.instance.newWebSocketCall(client, request);</span><br></pre></td></tr></table></figure></p>
+<p>从OkHttpClient中 获取WebSocket的<strong>call对象</strong>（回调使用），这个<strong>Internal.instance</strong>虽然是接口方法，其实现是在OkHttpClient中，直接看对应方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">@Override public Call newWebSocketCall(OkHttpClient client, Request originalRequest) &#123;</span><br><span class="line">        return new RealCall(client, originalRequest, true);</span><br><span class="line">      &#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>步骤4：</strong><br>原来enqueue（）方法是使用<strong>RealCall.class的enqueue（）</strong>方法，这是一个<strong>入队</strong>的方法，而且是个<strong>异步</strong>的方法。这就说明webSocket<strong>建立连接后才响应回调</strong>。而且如果是长连接那么这个线程<strong>就一直在线程池里不会被释放掉</strong>。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">call.enqueue(new Callback() &#123;</span><br><span class="line">      @Override public void onResponse(Call call, Response response) &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">          checkResponse(response);</span><br><span class="line">        &#125; catch (ProtocolException e) &#123;</span><br><span class="line">          failWebSocket(e, response);</span><br><span class="line">          closeQuietly(response);</span><br><span class="line">          return;</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure></p>
+<p>照现在的进度已经到了设置好的回调要开始执行了，那就转战<strong>RealCall</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">@Override public void enqueue(Callback responseCallback) &#123;</span><br><span class="line">   synchronized (this) &#123;</span><br><span class="line">     if (executed) throw new IllegalStateException(&quot;Already Executed&quot;);</span><br><span class="line">     executed = true;</span><br><span class="line">   &#125;</span><br><span class="line">   captureCallStackTrace();</span><br><span class="line">   client.dispatcher().enqueue(new AsyncCall(responseCallback));</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure></p>
+<p>其实我对okhttp同步请求有几点疑惑：<br><strong>1一开始我没有创建线程，那么这个请求就是在主线程中吗？</strong><br><strong>2如果是同步请求那么如果同时多次请求是不是如果前面的请求在执行后面的请求在进入等待的状态了呢？</strong><br>其实这些问题就需要从<strong>dispatcher（）</strong>的线程池入手了。<br>这个dispatcher在一开始介绍ok的时候已经介绍过了，我们来看dispatcher中的<strong>enqueue（）</strong>方法：<br>嘿嘿嘿，又到了OkHttp请求里了 而且 这时候realCall内部创建了AsyncCall(异步的Call)，其实看方法名就应该知道的，<strong>ok的webSocket都是使用异步的</strong>，而且我们要明白现在只是一个最初的socket，之后的通信，都会在该线程池的一个线程中进行。<br><strong>问题1：ok的websocket是异步的，并不会阻塞主线程，而且也不需要单独开辟一个子线程来创建连接。</strong><br><strong>问题2：会不会阻塞首先我们再次看看这个executorService的线程池结构。虽然在同步篇对dispatcher的线程池做过介绍，但是在我看来还是很解释不够清晰的地方：</strong><br>首先 这个是dispatcher线程池的结构<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">executorService = new ThreadPoolExecutor(0, Integer.MAX_VALUE, 60, TimeUnit.SECONDS,</span><br><span class="line">          new SynchronousQueue&lt;Runnable&gt;(), Util.threadFactory(&quot;OkHttp Dispatcher&quot;, false));</span><br></pre></td></tr></table></figure></p>
+<p>我在这里做一个详细的说明：首先，<strong>SynchronousQueue</strong>是一个<strong>无缓存的阻塞的队列</strong>，什么意思呢？我们可以理解为当这个队列中有元素的时候，这个元素没有被取走（take方法）之前是不允许继续对之后的内容进行操作。</p>
+<ul>
+<li><strong>注意1</strong>：它一种阻塞队列，其中<strong>每个 put 必须等待一个 take</strong>，反之亦然。<strong>同步队列没有任何内部容量</strong>，甚至连一个队列的容量都没有。<br><strong>注意2</strong>：它是<strong>线程安全</strong>的，是阻塞的。<br><strong>注意3</strong>:<strong>不允许使用 null 元素</strong>。<br><strong>注意4</strong>：公平排序策略是指调用<strong>put的线程之间，或take的线程之间</strong>。公平排序策略可以查考ArrayBlockingQueue中的公平策略。<br>所以这又解决了一个困扰我多年的难题：<br><strong>okhttp的能同时执行多少个请求？</strong><br>这个线程池的配置其实就是Executors提供的线程池配置方案之一，构造一个缓冲功能的线程池，配置corePoolSize=0，maximumPoolSize=Integer.MAX_VALUE，keepAliveTime=60s,以及一个无容量的阻塞队列 SynchronousQueue，因此任务提交之后，将会创建新的线程执行；<strong>线程空闲超过60s将会销毁</strong>：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">public static ExecutorService newCachedThreadPool() &#123;</span><br><span class="line">        return new ThreadPoolExecutor(0, Integer.MAX_VALUE,</span><br><span class="line">                                      60L, TimeUnit.SECONDS,</span><br><span class="line">                                      new SynchronousQueue&lt;Runnable&gt;());</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>用一个形象的比喻就是一个传球手，<strong>当从主线程传进了任务，就创建一个runnable来接收</strong>。<br>这里是Dispatcher的异步启动方法：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">synchronized void enqueue(AsyncCall call) &#123;</span><br><span class="line">   if (runningAsyncCalls.size() &lt; maxRequests &amp;&amp; runningCallsForHost(call) &lt; maxRequestsPerHost) &#123;</span><br><span class="line">     runningAsyncCalls.add(call);</span><br><span class="line">     executorService().execute(call);</span><br><span class="line">   &#125; else &#123;</span><br><span class="line">     readyAsyncCalls.add(call);</span><br><span class="line">   &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure></p>
+<p>在这里专门用runningAsyncCalls来记录在执行的Call，每次执行都会记录，当向executor添加call的时候，根据2，将任务放入SynchronousQueue中等待前面的request被取出才能执行之后的request，这里maxRequests 被定为64.超出64的将会被放入readyAsyncCalls。<br>ready和running之间怎么传递呢？<br>这就需要我们对比分析下RealCall这个类：<br>同步的时候是调用RealCall的：@Override public Response execute() throws IOException<br>异步的时候是调用AsyncCall的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">@Override protected void execute() &#123;</span><br><span class="line">      boolean signalledCallback = false;</span><br><span class="line">      try &#123;</span><br><span class="line">        Response response = getResponseWithInterceptorChain();</span><br><span class="line">        if (retryAndFollowUpInterceptor.isCanceled()) &#123;</span><br><span class="line">          signalledCallback = true;</span><br><span class="line">          responseCallback.onFailure(RealCall.this, new IOException(&quot;Canceled&quot;));</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">          signalledCallback = true;</span><br><span class="line">          responseCallback.onResponse(RealCall.this, response);</span><br><span class="line">        &#125;</span><br><span class="line">      &#125; catch (IOException e) &#123;</span><br><span class="line">        if (signalledCallback) &#123;</span><br><span class="line">          // Do not signal the callback twice!</span><br><span class="line">          Platform.get().log(INFO, &quot;Callback failure for &quot; + toLoggableString(), e);</span><br><span class="line">        &#125; else &#123;</span><br><span class="line">          responseCallback.onFailure(RealCall.this, e);</span><br><span class="line">        &#125;</span><br><span class="line">      &#125; finally &#123;</span><br><span class="line">        client.dispatcher().finished(this);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure></p>
+<p>事件的回调已经具备了，回收需要看这里.finished(this)方法，最终会调用这个：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">private void promoteCalls() &#123;</span><br><span class="line">    if (runningAsyncCalls.size() &gt;= maxRequests) return; // Already running max capacity.</span><br><span class="line">    if (readyAsyncCalls.isEmpty()) return; // No ready calls to promote.</span><br><span class="line"></span><br><span class="line">    for (Iterator&lt;AsyncCall&gt; i = readyAsyncCalls.iterator(); i.hasNext(); ) &#123;</span><br><span class="line">      AsyncCall call = i.next();</span><br><span class="line"></span><br><span class="line">      if (runningCallsForHost(call) &lt; maxRequestsPerHost) &#123;</span><br><span class="line">        i.remove();</span><br><span class="line">        runningAsyncCalls.add(call);</span><br><span class="line">        executorService().execute(call);</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      if (runningAsyncCalls.size() &gt;= maxRequests) return; // Reached max capacity.</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/OkHttp-源码-WebSocket/" rel="tag"># OkHttp 源码 WebSocket</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/11/02/Android 开发常见的几种屏幕适配方案(一)/" rel="prev" title="Android 开发常见的几种屏幕适配方案(一)">
+                Android 开发常见的几种屏幕适配方案(一) <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Wang Chen</p>
+              <p class="site-description motion-element" itemprop="description">bugMaker.</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-name">标签</span>
+                
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#OkHttp使用—WebSocket"><span class="nav-number">1.</span> <span class="nav-text">OkHttp使用—WebSocket</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Wang Chen</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Pisces</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
